@@ -12,10 +12,62 @@
 
   <link rel="apple-touch-icon" href="icon.png">
 
-  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbxJW4URXas3qu8wqA6Ff18TmKrfCWmn0vPsU1d08oEOniKVVqnuFZFRAc6nA0A_6su0/exec">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      background: #f4f7fb;
+      color: #202124;
+    }
+
+    img {
+      width: 160px;
+      border-radius: 32px;
+      margin-top: 30px;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 16px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      background: #d92323;
+      color: white;
+    }
+  </style>
+
+  <script>
+    const appURL =
+      "https://script.google.com/macros/s/AKfycbxJW4URXas3qu8wqA6Ff18TmKrfCWmn0vPsU1d08oEOniKVVqnuFZFRAc6nA0A_6su0/exec";
+
+    if (window.navigator.standalone === true) {
+      window.location.replace(appURL);
+    }
+
+    function openPOCUS() {
+      window.location.href = appURL;
+    }
+  </script>
 </head>
 
 <body>
-  <p>Opening Point of Care…</p>
+
+  <img src="icon.png" alt="Point of Care">
+
+  <h1>Point of Care</h1>
+
+  <p>
+    On iPhone, tap the Share button and choose
+    <strong>Add to Home Screen</strong>.
+  </p>
+
+  <button onclick="openPOCUS()">Open POCUS</button>
+
 </body>
 </html>
