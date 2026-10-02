@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Log POCUS Scan</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f4f7fb;
+      color: #202124;
+    }
+
+    .card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 26px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 16px;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: white;
+    }
+
+    textarea {
+      min-height: 90px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background: #d92323;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+    }
+
+    #message {
+      margin-top: 16px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>Log a POCUS Scan</h1>
+
+  <label for="traineeId">Trainee ID</label>
+  <input id="traineeId" type="text" placeholder="e.g. P002">
+
+  <label for="moduleId">Module</label>
+  <select id="moduleId">
+    <option value="">Select module</option>
+    <option value="MOD01">POCUS Foundations</option>
+    <option value="MOD02">eFAST</option>
+    <option value="MOD03">Abdominal Aortic Aneurysm</option>
+    <option value="MOD04">Ultrasound-Guided Peripheral IV Access</option>
+    <option value="MOD05">Lung Ultrasound</option>
+    <option value="MOD06">Early Pregnancy Ultrasound</option>
+    <option value="MOD07">Focused Echocardiography</option>
+    <option value="MOD08">Hepatobiliary Ultrasound</option>
+    <option value="MOD09">Renal Ultrasound</option>
+    <option value="MOD10">Above-knee DVT Ultrasound</option>
+    <option value="MOD11">Soft Tissue & Small Parts</option>
+    <option value="MOD12">MSK Ultrasound</option>
+  </select>
+
+  <label for="scanDate">Scan Date</label>
+  <input id="scanDate" type="date">
+
+  <label for="clinicalIndication">Clinical Indication</label>
+  <input id="clinicalIndication" type="text">
+
+  <label for="supervised">Supervised?</label>
+  <select id="supervised">
+    <option value="">Select</option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+  </select>
+
+  <label for="supervisor">Supervisor ID</label>
+  <input id="supervisor" type="text" placeholder="e.g. P001">
+
+  <label for="imageSaved">Images Saved?</label>
+  <select id="imageSaved">
+    <option value="">Select</option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+  </select>
+
+  <label for="imageQuality">Image Quality</label>
+  <select id="imageQuality">
+    <option value="">Select</option>
+    <option value="diagnostic">Diagnostic</option>
+    <option value="limited">Limited</option>
+    <option value="non-diagnostic">Non-diagnostic</option>
+  </select>
+
+  <label for="interpretation">Interpretation</label>
+  <input id="interpretation" type="text">
+
+  <label for="correctInterpretation">Correct Interpretation?</label>
+  <select id="correctInterpretation">
+    <option value="">Select</option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+  </select>
+
+  <label for="outcome">Outcome</label>
+  <input id="outcome" type="text">
+
+  <label for="comments">Comments</label>
+  <textarea id="comments"></textarea>
+
+  <button id="saveBtn" onclick="saveScan()">Save Scan</button>
+
+  <div id="message"></div>
+
+</div>
+
+<script>
+const BACKEND_URL =
+  "https://script.google.com/macros/s/AKfycbzHaRnPwj06A0iYpwdZR6UsBjsVTY2uFCDrIKl9HIGjJU29coBehWP1-gy9UUydw2JM/exec";
+
+document.getElementById('scanDate').valueAsDate = new Date();
+
+async function saveScan() {
+  const message = document.getElementById('message');
+  const saveBtn = document.getElementById('saveBtn');
+
+  const scan = {
+    traineeId: document.getElementById('traineeId').value.trim(),
+    moduleId: document.getElementById('moduleId').value,
+    scanDate: document.getElementById('scanDate').value,
+    clinicalIndication: document.getElementById('clinicalIndication').value.trim(),
+    supervised: document.getElementById('supervised').value,
+    supervisor: document.getElementById('supervisor').value.trim(),
+    imageSaved: document.getElementById('imageSaved').value,
+    imageQuality: document.getElementById('imageQuality').value,
+    interpretation: document.getElementById('interpretation').value.trim(),
+    correctInterpretation: document.getElementById('correctInterpretation').value,
+    outcome: document.getElementById('outcome').value.trim(),
+    comments: document.getElementById('comments').value.trim()
+  };
+
+  if (!scan.traineeId) {
+    message.innerText = 'Please enter trainee ID.';
+    return;
+  }
+
+  if (!scan.moduleId) {
+    message.innerText = 'Please select a module.';
+    return;
+  }
+
+  if (!scan.scanDate) {
+    message.innerText = 'Please enter scan date.';
+    return;
+  }
+
+  if (!scan.clinicalIndication) {
+    message.innerText = 'Please enter clinical indication.';
+    return;
+  }
+
+  saveBtn.disabled = true;
+  message.innerText = 'Saving...';
+
+  try {
+    const response = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(scan)
+    });
+
+    const result = await response.json();
+
+    if (result.ok) {
+      message.innerText = '✅ ' + result.message;
+    } else {
+      message.innerText = 'Error: ' + result.error;
+    }
+
+  } catch (err) {
+    message.innerText = 'Error: ' + err.message;
+  }
+
+  saveBtn.disabled = false;
+}
+</script>
+
+</body>
+</html>
